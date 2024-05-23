@@ -58,7 +58,7 @@ export default function ServerSideBox(){
             <button type={"button"} onClick={serverSideFunction} >Server Side Function</button>
             <button type={"button"} onClick={serverSideApi} >Server API Call</button>
             <button type={"button"} onClick={readFile} >Server Function Read File from root.</button>
-            <button type={"button"} onClick={readFileFromServer} >Server API Read File from root.</button>
+            {/*<button type={"button"} onClick={readFileFromServer} >Server API Read File from root.</button>*/}
             <input type={"file"} onChange={uploadFile}/>
             <div className={'min-h-32 border-black border '}>
                 {image?
