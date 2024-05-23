@@ -33,16 +33,32 @@ export default function ServerSideBox(){
     const serverUpload = async (e)=>{
         e.preventDefault()
         let formData = new FormData(formRef.current)
-        let res = await ServerUpload(formData)
+        let res = await (
+            await fetch("/api/file",{
+                method:"POST",
+                body:formData
+            })
+        ).json();
         if(!res.error){
+            console.log()
             setOutput(`File "${res.name}" uploaded of size ${res.size}, with file type "${res.type}"`)
+        }
+    }
+    const readFileFromServer = async (e)=>{
+        let res = await (
+            await fetch("/api/file")
+        ).json();
+        if(!res.error){
+            console.log(res.data)
+            setOutput(res.data)
         }
     }
     return(
         <div className={'flex justify-evenly flex-col md:flex-row w-fit m-auto text-center'}>
             <button type={"button"} onClick={serverSideFunction} >Server Side Function</button>
             <button type={"button"} onClick={serverSideApi} >Server API Call</button>
-            <button type={"button"} onClick={readFile} >Server Read File from root.</button>
+            <button type={"button"} onClick={readFile} >Server Function Read File from root.</button>
+            <button type={"button"} onClick={readFileFromServer} >Server API Read File from root.</button>
             <input type={"file"} onChange={uploadFile}/>
             <div className={'min-h-32 border-black border '}>
                 {image?
