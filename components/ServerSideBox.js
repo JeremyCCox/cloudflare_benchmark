@@ -1,9 +1,11 @@
 'use client'
 import {ReadFile, ServerUpload, TestFunction} from "@/lib/serverFunctions";
 import {useEffect, useRef, useState} from "react";
+import {useRouter} from "next/navigation";
 
-export default function ServerSideBox(){
+export default function ServerSideBox({data}){
     const [output, setOutput] = useState()
+    const [databaseContent, setDatabaseContent] = useState(data)
     const [image, setImage] = useState()
     const formRef = useRef()
     useEffect(() => {
@@ -53,12 +55,25 @@ export default function ServerSideBox(){
             setOutput(res.data)
         }
     }
+    const getDatabase=async ()=>{
+        let data = await fetch("/api/database");
+        // console.log(await data.json())
+        setDatabaseContent((await data.json()).data)
+    }
+    const Router = useRouter();
+    const postDatabase=async ()=>{
+        let data = await fetch("/api/database", {
+            method:"POST",
+            body:JSON.stringify({data:document.getElementById("postData").value})
+        });
+        Router.refresh();
+        console.log(await data.json())
+    }
     return(
-        <div className={'flex justify-evenly flex-col md:flex-row w-fit m-auto text-center'}>
+        <div className={'flex justify-evenly flex-col w-fit m-auto text-center'}>
             <button type={"button"} onClick={serverSideFunction} >Server Side Function</button>
             <button type={"button"} onClick={serverSideApi} >Server API Call</button>
             <button type={"button"} onClick={readFile} >Server Function Read File from root.</button>
-            {/*<button type={"button"} onClick={readFileFromServer} >Server API Read File from root.</button>*/}
             <input type={"file"} onChange={uploadFile}/>
             <div className={'min-h-32 border-black border '}>
                 {image?
@@ -72,6 +87,18 @@ export default function ServerSideBox(){
                 <input type={'file'} name={'file'} />
                 <button>Upload File to Backend</button>
             </form>
+            <div>
+                <button type={"button"} onClick={getDatabase} >Get Database.</button>
+                <label className={'w-full flex'}>
+                    <input className={'grow'} type={"text"} id={'postData'}/>
+                    <button type={"button"} onClick={postDatabase} >Post to Database.</button>
+                </label>
+                {databaseContent?
+                    Object.values(databaseContent).map((data,index)=>{
+                        return(<p className={'w-full'} key={index}>{data}</p>)
+                    }):null
+                }
+            </div>
 
         </div>
     )
