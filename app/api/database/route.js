@@ -16,15 +16,15 @@ export async function GET(request, response){
     })
     return new Response(JSON.stringify({data:cleanTests}))
 }
-export async function POST(request,response){
-    try{
-        await mongoose.connect(process.env.MONGODB_URI)
-        let data = (await request.json()).data
-        let test  = await Test.create({test:data})
-        revalidatePath('/','page')
-        return new Response(JSON.stringify({data:test}))
-    }catch(e){
-        console.error(e)
-        return e
-    }
-}
+// export async function POST(request,response){
+//     try{
+//         await mongoose.connect(process.env.MONGODB_URI)
+//         let data = (await request.json()).data
+//         let test  = await Test.create({test:data})
+//         revalidatePath('/','page')
+//         return new Response(JSON.stringify({data:test}))
+//     }catch(e){
+//         console.error(e)
+//         return e
+//     }
+// }
