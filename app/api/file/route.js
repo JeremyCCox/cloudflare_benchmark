@@ -1,5 +1,6 @@
 import {NextResponse as Response} from "next/server";
 import fs from "fs";
+export const runtime = 'edge'
 export async function POST(request,response){
     try{
         let data = (await request.formData()).get('file')
