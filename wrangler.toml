@@ -1,7 +1,0 @@
-name="cloudflare_benchmark"
-
-compatibility_flags = ["nodejs_compat"]
-
-[[kv_namespaces]]
-binding = "MY_KV"
-id="6d36ea3b8d9647299c66b6946f1b8351"

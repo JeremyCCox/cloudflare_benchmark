@@ -10,17 +10,30 @@ function cleanTest(test){
     return(test.test)
 }
 
+function getEnvVal(valList){
+    let envList = []
+    if( process.env.MONGODB_URI !== undefined){
+        envList = Object.values(valList).map(value => {
+            return(process.env[value])
+        })
+    }else{
+        const myKv = getRequestContext().env.MY_KV
+        console.log(myKv)
+        console.log(getRequestContext().env["MONGODB_URI"])
+        console.log(myKv.get("MONGODB_URI"))
+        envList = Object.values(valList).map(value => {
+            return(mykv.get(value))
+        })
+        console.log(envList)
+    }
+    return envList
+
+}
 
 export async function GET(request, response){
     try{
-
-        const myKv = getRequestContext().env.MY_KV
-        // console.log(myKv)
-        let uri = await myKv.get('MONGODB_URI')
-        // console.log(uri)
-        let apiKey = await myKv.get('MONGODB_DATA_API_KEY')
-        // console.log(apiKey)
-
+        let [uri, apiKey] = getEnvVal(["MONGODB_URI", "MONGODB_DATA_API_KEY"])
+        console.log([uri, apiKey])
         let res = await fetch(uri+"/action/find",{
             method:'POST',
             headers:{
@@ -39,12 +52,14 @@ export async function GET(request, response){
         let cleanTests = tests.map(test => {
             return cleanTest(test)
         })
-
+        if(cleanTests.length === 0 ){
+            cleanTests = ["Database looks empty!"]
+        }
         return new Response(
             JSON.stringify(
                 {
-                    data:["val"]
-                    // data: cleanTests
+                    // data:["val"]
+                    data: cleanTests
                 }
             )
         )
