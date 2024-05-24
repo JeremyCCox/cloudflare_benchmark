@@ -1,4 +1,6 @@
 import {NextResponse as Response} from "next/dist/server/web/spec-extension/response";
+import { getRequestContext } from '@cloudflare/next-on-pages'
+
 // import mongoose from "mongoose";
 // import Test from "@/models/Test";
 // import {revalidatePath} from "next/cache";
@@ -8,12 +10,21 @@ function cleanTest(test){
     return(test.test)
 }
 
+
 export async function GET(request, response){
     try{
-        let res = await fetch(process.env.MONGODB_URI+"/action/find",{
+
+        const myKv = getRequestContext().env.MY_KV
+        // console.log(myKv)
+        let uri = await myKv.get('MONGODB_URI')
+        // console.log(uri)
+        let apiKey = await myKv.get('MONGODB_DATA_API_KEY')
+        // console.log(apiKey)
+
+        let res = await fetch(uri+"/action/find",{
             method:'POST',
             headers:{
-                'apiKey':process.env.MONGODB_DATA_API_KEY,
+                'apiKey':apiKey,
                 'Content-Type':"application/json",
                 'Accept':'application/json',
             },
@@ -28,10 +39,12 @@ export async function GET(request, response){
         let cleanTests = tests.map(test => {
             return cleanTest(test)
         })
+
         return new Response(
             JSON.stringify(
                 {
-                    data: cleanTests
+                    data:["val"]
+                    // data: cleanTests
                 }
             )
         )
