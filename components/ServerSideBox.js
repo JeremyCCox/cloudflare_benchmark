@@ -3,9 +3,9 @@ import {ReadFile, ServerUpload, TestFunction} from "@/lib/serverFunctions";
 import {useEffect, useRef, useState} from "react";
 import {useRouter} from "next/navigation";
 
-export default function ServerSideBox({data}){
+export default function ServerSideBox(){
     const [output, setOutput] = useState()
-    const [databaseContent, setDatabaseContent] = useState(data)
+    const [databaseContent, setDatabaseContent] = useState()
     const [image, setImage] = useState()
     const formRef = useRef()
     useEffect(() => {
@@ -57,17 +57,16 @@ export default function ServerSideBox({data}){
     }
     const getDatabase=async ()=>{
         let data = await fetch("/api/database");
-        // console.log(await data.json())
         setDatabaseContent((await data.json()).data)
     }
     const Router = useRouter();
     const postDatabase=async ()=>{
-        let data = await fetch("/api/database", {
+        let res = await fetch("/api/database", {
             method:"POST",
             body:JSON.stringify({data:document.getElementById("postData").value})
         });
-        Router.refresh();
-        console.log(await data.json())
+        setOutput((await res.json()).data)
+        await getDatabase()
     }
     return(
         <div className={'flex justify-evenly flex-col w-fit m-auto text-center'}>
