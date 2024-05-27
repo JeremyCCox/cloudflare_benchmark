@@ -1,4 +1,5 @@
 import { setupDevPlatform } from '@cloudflare/next-on-pages/next-dev'
+// import process from "next/dist/build/webpack/loaders/resolve-url-loader/lib/postcss";
 /** @type {import('next').NextConfig} */
 const nextConfig = {};
 

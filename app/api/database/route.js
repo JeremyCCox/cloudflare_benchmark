@@ -10,7 +10,7 @@ function cleanTest(test){
     return(test.test)
 }
 
-function getEnvVal(valList){
+export function getEnvVal(valList){
     let envList = []
     if( process.env.MONGODB_URI !== undefined){
         envList = Object.values(valList).map(value => {
