@@ -1,4 +1,4 @@
-import {getEnvVal} from "@/app/api/database/route";
+import {getData} from "@/lib/serverFunctions";
 
 export default async function ArticleList({category}) {
     let posts = await getData(category)
@@ -15,30 +15,4 @@ export default async function ArticleList({category}) {
             })}
         </>
     )
-}
-
-export async function getData(category){
-    let [uri, apiKey] = getEnvVal(["MONGODB_URI", "MONGODB_DATA_API_KEY"])
-    let res = await fetch(uri+"/action/find",{
-        method:'POST',
-        headers:{
-            'apiKey':apiKey,
-            'Content-Type':"application/json",
-            'Accept':'application/json',
-        },
-        body:JSON.stringify({
-            "dataSource": "mongodb-atlas",
-            "database": "cloudflare",
-            "collection":"tests",
-            "filter":{
-                "category":{
-                    "$eq":category
-                }
-            }
-        })
-    })
-    let posts  = (await res.json()).documents
-    return Object.values(posts).map(post=>{
-        return({title:post.test,category:post.category})
-    })
 }
